@@ -16,7 +16,7 @@ const spritesmith 	= require('gulp.spritesmith');
 
 /* ---------------------------------- CONFIG ---------------------------------- */
 
-const localUrl 		= "inigopascall.local"; 
+const localUrl 		= "localdomain.local"; 
 
 const templatesPath = '../resources/views/';
 const scssPath 		= 'dev/scss/';
@@ -24,6 +24,16 @@ const jsPath 		= 'dev/js/';
 
 const scssInput 	= scssPath 	+ 'main.scss';
 const jsInput 		= jsPath 	+ '**/*.js';
+
+const jsOutput = {
+	filename: 'build.js',
+	path: './build/js/'
+}
+
+const cssOutput = {
+	filename: 'build.css',
+	path: './build/css/'
+}
 
 const cbTemplates	= [templatesPath + 'welcome.blade.php']; // template(s) containing links to versioned assets where ?v=xxx will be updated by find & replace
 
@@ -91,9 +101,9 @@ function compileSCSS(){
 		.pipe(base64(base64options.images))
 		.pipe(base64(base64options.fonts))
 		.pipe(postcss([ autoprefixer(), cssnano() ]))
-		.pipe(rename('build.css'))
+		.pipe(rename(cssOutput.filename))
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('build/css')
+		.pipe(gulp.dest(cssOutput.path)
 	);
 }
 
@@ -102,11 +112,11 @@ function compileJS(){
 		jsInput
 		])
 		.pipe(sourcemaps.init())
-		.pipe(concat('build.js'))
+		.pipe(concat(jsOutput.filename))
 		.pipe(babel(babelConfig))
 		.pipe(terser())
 		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('build/js')
+		.pipe(gulp.dest(jsOutput.path)
 	);
 }
 
